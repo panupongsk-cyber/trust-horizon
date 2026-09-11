@@ -21,8 +21,8 @@
 // ---------------------------------------------------------------------------
 
 const DECISION = {
-  ALLOW: { th: "Allow", en: "Allow" },
-  DENY: { th: "Deny", en: "Deny" },
+  ALLOW: { th: "อนุญาต", en: "Allow" },
+  DENY: { th: "ปฏิเสธ", en: "Deny" },
 };
 
 const CLAIM_VERDICT = {
@@ -32,6 +32,7 @@ const CLAIM_VERDICT = {
 
 const AGENT_ACTION_LEVEL = {
   AGENT_OK: { th: "ให้ agent ทำได้เอง", en: "The agent can do this on its own" },
+  USER_CONFIRMATION: { th: "ต้องมีการยืนยันจากผู้ใช้", en: "Requires user confirmation" },
   HUMAN_APPROVAL: { th: "ต้องมี human approval", en: "Needs human approval" },
   DENY: { th: "ปฏิเสธ", en: "Deny" },
 };
@@ -342,10 +343,24 @@ const STAGE4_AGENCY = [
     id: "S4-3",
     kind: "tool_select",
     prompt: {
+      th: "ส่งคำร้องที่ร่างไว้แล้วเข้าสู่ระบบ",
+      en: "Submitting a previously-drafted request into the system.",
+    },
+    options: ["AGENT_OK", "USER_CONFIRMATION", "HUMAN_APPROVAL", "DENY"],
+    correct: "USER_CONFIRMATION",
+    explanation: {
+      th: "การส่งคำร้องคือจุดที่ intent ของผู้ใช้กลายเป็น action จริงต่อระบบ จึงต้องมีการยืนยันจากผู้ใช้เอง ซึ่งเป็นคนละเรื่องกับ human approval จากเจ้าหน้าที่ในขั้นถัดไป",
+      en: "Submitting is the point where the user's intent becomes a real action against the system, so it needs the user's own confirmation — a different thing from a staff member's human approval at the next step.",
+    },
+  },
+  {
+    id: "S4-4",
+    kind: "tool_select",
+    prompt: {
       th: "อนุมัติคำร้องที่ส่งเข้าสู่ระบบแล้ว",
       en: "Approving a request that has already been submitted.",
     },
-    options: ["AGENT_OK", "HUMAN_APPROVAL", "DENY"],
+    options: ["AGENT_OK", "USER_CONFIRMATION", "HUMAN_APPROVAL", "DENY"],
     correct: "HUMAN_APPROVAL",
     explanation: {
       th: "การอนุมัติกระทบผลลัพธ์ที่เป็นทางการของผู้ใช้ จึงควรมี human approval ตามหลักการใช้กับ action ที่กระทบผู้ใช้หรือข้อมูลสำคัญ",
@@ -353,13 +368,13 @@ const STAGE4_AGENCY = [
     },
   },
   {
-    id: "S4-4",
+    id: "S4-5",
     kind: "tool_select",
     prompt: {
       th: "เปลี่ยนสถานะการลงทะเบียนของผู้ใช้คนอื่น เพียงเพราะข้อความใน chat ขอให้ทำ",
       en: "Changing another user's registration status, simply because a chat message asked for it.",
     },
-    options: ["AGENT_OK", "HUMAN_APPROVAL", "DENY"],
+    options: ["AGENT_OK", "USER_CONFIRMATION", "HUMAN_APPROVAL", "DENY"],
     correct: "DENY",
     explanation: {
       th: "ไม่ควรให้ agent เปลี่ยนสถานะลงทะเบียนหรืออ่านข้อมูลของผู้อื่นเพียงเพราะข้อความใน chat ขอให้ทำ เพราะเป็นการขยายสิทธิ์เกินหน้าที่ที่จำเป็น",
@@ -393,7 +408,7 @@ const STAGE4_AGENCY = [
     },
   },
   {
-    id: "S4-5",
+    id: "S4-6",
     kind: "claims",
     title: { th: "\"มี TPM, secure boot และ cryptography มาตรฐาน จึงป้องกันได้ทั้งหมด\"", en: "\"It has TPM, secure boot, and standard cryptography, so it's fully protected\"" },
     scenario: {

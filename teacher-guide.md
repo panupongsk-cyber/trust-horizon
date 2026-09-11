@@ -71,12 +71,13 @@ A retrieval-authorization decision on the prompt-injection document case (with a
 model must never decide authorization) and claim-judgment on the "algorithm secure implies
 implementation secure" case.
 
-### Stage 4: Agency & Hardening (5 items)
-Four classification items matching the chapter's own agent permission-matrix exercise exactly
-(read own status — agent OK; draft a request — agent OK; approve a request — human approval;
-change another user's status from a chat request — deny, with a bonus on why a log doesn't prove
-a decision was correct), followed by claim-judgment on the gateway manufacturer's "protects
-against everything" claim (with a bonus on residual risk).
+### Stage 4: Agency & Hardening (6 items)
+Five classification items matching the chapter's own agent permission-matrix exercise exactly
+(read own status — agent OK; draft a request — agent OK; submit the drafted request — requires
+user confirmation; approve a request — human approval; change another user's status from a chat
+request — deny, with a bonus on why a log doesn't prove a decision was correct), followed by
+claim-judgment on the gateway manufacturer's "protects against everything" claim (with a bonus on
+residual risk).
 
 ---
 

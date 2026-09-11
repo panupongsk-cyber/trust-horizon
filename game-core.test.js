@@ -25,7 +25,7 @@ try {
   assert.strictEqual(STAGE1_MAPPING.length, 2, "Stage 1 should have exactly 2 threat/trust-map claims items.");
   assert.strictEqual(STAGE2_EVIDENCE_SCOPE.length, 2, "Stage 2 should have exactly 2 evidence-scope claims items.");
   assert.strictEqual(STAGE3_LAYERS.length, 2, "Stage 3 should have exactly 2 items (1 authorization + 1 claims).");
-  assert.strictEqual(STAGE4_AGENCY.length, 5, "Stage 4 should have exactly 5 items (4 classify + 1 claims).");
+  assert.strictEqual(STAGE4_AGENCY.length, 6, "Stage 4 should have exactly 6 items (5 classify + 1 claims).");
 
   const s3ClaimsItems = STAGE3_LAYERS.filter((i) => i.kind === "claims");
   const s4ClaimsItems = STAGE4_AGENCY.filter((i) => i.kind === "claims");
@@ -93,7 +93,7 @@ try {
 
   // Test 6: Stage 4 agent action-level classification and platform-hardening overclaim
   console.log("Test 6: Verifying Stage 4 classification and overclaim rule...");
-  const s4item4 = STAGE4_AGENCY[3];
+  const s4item4 = STAGE4_AGENCY[4];
   assert.ok(s4item4.bonusQuestion, "The deny-classification item must carry a bonus question.");
   const correctBonus4 = s4item4.bonusQuestion.options.find((b) => b.correct);
   const s4Perfect = scoreToolSelect(s4item4, { choice: s4item4.correct, bonusId: correctBonus4.id });
@@ -101,7 +101,7 @@ try {
   const s4Wrong = scoreToolSelect(s4item4, { choice: "AGENT_OK", bonusId: correctBonus4.id });
   assert.ok(s4Wrong.ratio < s4Perfect.ratio, "Classifying a denied action as agent-OK must never score as well as the correct answer.");
 
-  const s4item5 = STAGE4_AGENCY[4];
+  const s4item5 = STAGE4_AGENCY[5];
   const s4ClaimsPerfectVerdicts = {};
   s4item5.claims.forEach((c) => { s4ClaimsPerfectVerdicts[c.id] = c.correctVerdict; });
   const s4CorrectBonus = s4item5.bonusQuestion.options.find((b) => b.correct);
