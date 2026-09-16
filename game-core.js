@@ -468,16 +468,6 @@ const STAGE4_AGENCY = [
 // Scoring
 // ---------------------------------------------------------------------------
 
-/** Same speed-bonus formula used across the other 305331 games. */
-function calculateScore(basePoints, timeElapsedSeconds, maxTimeSeconds = 45) {
-  if (timeElapsedSeconds >= maxTimeSeconds) {
-    return Math.floor(basePoints * 0.5);
-  }
-  const speedRatio = (maxTimeSeconds - timeElapsedSeconds) / maxTimeSeconds;
-  const speedBonus = Math.floor(basePoints * 0.5 * speedRatio);
-  return basePoints + speedBonus;
-}
-
 function scoreToolSelect(item, answer) {
   const mainCorrect = answer.choice === item.correct;
   if (!item.bonusQuestion) {
@@ -541,45 +531,45 @@ function evaluateLearningOutcome(stageAccuracies) {
   const overallAccuracy =
     values.length > 0 ? values.reduce((sum, v) => sum + v, 0) / values.length : 0;
 
-  let rank = {
+  let practiceBand = {
     badge: "🤖",
-    title: { th: "ผู้เฝ้าขอบฟ้าแห่งความเชื่อมั่นฝึกหัด", en: "Trust Horizon Trainee" },
+    title: { th: "ช่วงผลการฝึก: ต่ำกว่า 50%", en: "Practice band: below 50%" },
     description: {
-      th: "เริ่มต้นได้ดี ลองเล่นซ้ำเพื่อฝึกแยกขอบเขตของ AI threat model, trust dependency, authorization ของ agent และข้อจำกัดของ platform hardening ให้คล่องขึ้น",
-      en: "A solid start — replay to get faster at AI threat-model and trust-dependency boundaries, agent authorization, and platform-hardening limits.",
+      th: "ผลนี้สะท้อนความถูกต้องในชุดสถานการณ์ฝึกนี้เท่านั้น ลองเล่นซ้ำเพื่อฝึกแยกขอบเขตของ AI threat model, trust dependency, authorization ของ agent และข้อจำกัดของ platform hardening ให้ชัดเจนขึ้น",
+      en: "This result reflects accuracy in this local scenario set only; replay to practise AI threat-model and trust-dependency boundaries, agent authorization, and platform-hardening limits.",
     },
   };
 
   if (overallAccuracy >= 90) {
-    rank = {
+    practiceBand = {
       badge: "🛡️",
-      title: { th: "หัวหน้าฝ่ายความมั่นคงปลอดภัย AI และ Trusted Computing", en: "Chief AI & Trusted Computing Security Officer" },
+      title: { th: "ช่วงผลการฝึก: 90–100%", en: "Practice band: 90–100%" },
       description: {
-        th: "วิเคราะห์ AI threat model, trust dependency, authorization ของ agent และข้อจำกัดของ platform hardening ได้แม่นยำครบทุกมิติ ไม่กล่าวเกินหลักฐานที่มี",
-        en: "Analyzes AI threat models, trust dependencies, agent authorization, and platform-hardening limits accurately across every dimension, and never overclaims beyond the evidence.",
+        th: "ความถูกต้องสูงในชุดสถานการณ์ฝึกนี้ โดยยังไม่ใช่การรับรองความสามารถในการปฏิบัติงานจริง",
+        en: "High accuracy in this local scenario set; it does not certify operational competence.",
       },
     };
   } else if (overallAccuracy >= 75) {
-    rank = {
+    practiceBand = {
       badge: "🔍",
-      title: { th: "นักวิเคราะห์ความน่าเชื่อถืออาวุโส", en: "Senior Trust & AI Security Analyst" },
+      title: { th: "ช่วงผลการฝึก: 75–89%", en: "Practice band: 75–89%" },
       description: {
-        th: "ตัดสินใจถูกต้องเป็นส่วนใหญ่ ยังพลาดบ้างในรายละเอียดของขอบเขตหลักฐานหรือผลกระทบ",
-        en: "Makes correct decisions most of the time, with a few slips on evidence scope or impact detail.",
+        th: "ความถูกต้องดีในชุดสถานการณ์ฝึกนี้ ลองทบทวนขอบเขตของหลักฐานและผลกระทบ",
+        en: "Good accuracy in this local scenario set; review evidence scope and impact detail.",
       },
     };
   } else if (overallAccuracy >= 50) {
-    rank = {
+    practiceBand = {
       badge: "🧭",
-      title: { th: "นักวิเคราะห์ความน่าเชื่อถือ", en: "Trust & AI Security Analyst" },
+      title: { th: "ช่วงผลการฝึก: 50–74%", en: "Practice band: 50–74%" },
       description: {
-        th: "เข้าใจหลักการพื้นฐาน แต่ยังสับสนระหว่างกลไกที่สนับสนุน claim แคบ ๆ กับการรับประกันความปลอดภัยทั้งหมด หรือกล่าวเกินหลักฐานที่มี",
-        en: "Grasps the basics, but still mixes up a mechanism supporting a narrow claim with a guarantee of overall safety, or overclaims beyond the evidence.",
+        th: "มีความเข้าใจพื้นฐานในชุดสถานการณ์ฝึกนี้ ลองทบทวนความต่างระหว่างกลไกที่สนับสนุน claim แคบ ๆ กับการรับประกันความปลอดภัยทั้งหมด",
+        en: "Some basic understanding in this local scenario set; review the difference between a mechanism supporting a narrow claim and a guarantee of overall safety.",
       },
     };
   }
 
-  return { accuracy: overallAccuracy, ...rank };
+  return { accuracy: overallAccuracy, ...practiceBand };
 }
 
 if (typeof module !== "undefined" && module.exports) {
@@ -591,7 +581,6 @@ if (typeof module !== "undefined" && module.exports) {
     STAGE2_EVIDENCE_SCOPE,
     STAGE3_LAYERS,
     STAGE4_AGENCY,
-    calculateScore,
     scoreToolSelect,
     scoreAuthorization,
     scoreClaims,
